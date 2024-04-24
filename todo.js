@@ -48,11 +48,30 @@ function updateTodo(updatedId, updatedTodo) {
     })
 }
 
+function completedToDo(updatedId, updatedTodo) {
+    todos = todos.map(todo => {
+        if (todo.id === updatedId) {
+            if(todo.completed){
+                todo.completed = false;
+            }else{
+                todo.completed = true
+            }
+            return {
+                ...todo,
+                ...updatedTodo
+            }
+        }
+        return todo
+    })
+}
+
 // Temizlmek
 function clearTodos() {
     $list.innerHTML = ''
     todos = []
 }
+
+
 
 function createTodoElement(todo) {
     const $li = document.createElement('li')
@@ -64,6 +83,9 @@ function createTodoElement(todo) {
     const $updateButton = document.createElement('button')
     $updateButton.innerText = 'Update'
 
+    const $complateButton = document.createElement('button')
+    $complateButton.innerText = 'Complate'
+
     $bodyElement.innerHTML = todo.body
 
     $li.appendChild($bodyElement)
@@ -72,8 +94,9 @@ function createTodoElement(todo) {
         <p>${todo.completed ? 'Completed' : 'Not Completed'}</p>
     `
 
-    $li.appendChild($deleteButton)
-    $li.appendChild($updateButton)
+    $li.appendChild($deleteButton);
+    $li.appendChild($updateButton);
+    $li.appendChild($complateButton);
 
     $deleteButton.addEventListener('click', () => {
         deleteTodo(todo.id)
@@ -84,6 +107,11 @@ function createTodoElement(todo) {
        const body = prompt('Update todo')
        updateTodo(todo.id, { body })
        getTodos()
+    })
+
+    $complateButton.addEventListener('click', () =>{
+        completedToDo(todo.id, todo.completed);
+        getTodos();
     })
 
     return $li
